@@ -1,0 +1,57 @@
+###############################################################################
+# Author: Vikash and Deepak
+# Note: For further information pls read report_and_configuration.pdf
+# For further guidance and support, please contact us us at: 
+# Vikash Kumar: cs11b038@iith.ac.in 
+# Deepak Bhardwaj: cs11b009@iith.ac.in
+###############################################################################
+
+System Description : 
+  The system implemented contains two major components :
+  1. The Ubuntu Server :
+      a)connection.sh 
+      b)connection.py
+      c)backup.sh
+	  d) database.sql
+  2. The RaspberryPi :
+      a)send.sh
+      b)files_ssh.sh
+      c)iwlist.py
+  3. The WebServer GUI
+  
+  Part 1: 
+          Details :
+          This folder contains files that are required on the server side.
+		  All the files and dir in this folder needs to copied on the desktop
+		  on the server.
+		   i)	Connection.sh :- Main job of this script is to loop through all the files send by raspberrypi and for each file 
+   			                     call 'connection.py' which will parse each file and enter the data into the database. Raspberrypi
+			                     is configured to send all the files to '/home/cs5113/networks/files/' folder.
+				
+		   ii)	Connection.py :- This python file will parse the files send by raspberrypi and put it accordingly in database :
+				
+		   iii) backup.sh :- This script will take backup of database and everything from device_data table for management purpose
+				
+		   iv)	database.sql:- This sql file contains all database table and its schema. Pls import it into mysql
+				
+          Execution :
+          The Connection.sh has to executed( with sudo privilege if 
+          required). The script then internally call connection.py. For setting up backup.sh as cron job please refer to report_configuration.py
+		  
+  Part 2:
+         Details :
+         All the files in this folder are meant only for RaspberryPi and needs to copied on to the desktop
+		 
+          i)   send.sh :- This script generate an output file which is unique to reach Pi every 30sec. It contains device_id of Pi,
+						  token no. of file to uniquely identify each file and its Ipv4 address and data of all the APs from which 
+						  it is getting the signal in a nice tabular form. It then store them into 'files_to_send' folder.
+          ii)  iwlist.py :- Main job of this file is to parse the output of 'iwlist scan' command in a more human readle format
+							so that it is easier to parse it on the server side. This file gets called internally in send.sh
+          iii) files_ssh.sh :- This file doesn't do anything special. Its main job is to copy whatever is there in 'files_to_send' dir
+							   over to the server in a specific folder which is '/home/cs5113/networks/files/'.
+          Execution :
+          Both send.sh and files_ssh.sh needs to executed via root priviledges as background process to work smoothly
+  Part 3:
+        Web Server allows User to see the heat-map of desired area and 
+		admin to allow modification of database or setting up new APs or 
+		RaspberryPi.
